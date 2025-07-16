@@ -11,7 +11,7 @@ pub struct Package {
 
 pub trait Manager {
     fn command_name(&self) -> OsString;
-    fn command_exists(&self) -> Result<(), &str>
+    fn test_command(&mut self) -> Result<(), String>
     where
         Self: Sized;
     fn remote_search(&self, query: &str) -> Result<Vec<Package>, &str>;
