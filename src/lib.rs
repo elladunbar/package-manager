@@ -1,5 +1,8 @@
 use std::error::Error;
+use std::sync::OnceLock;
 
+#[cfg(feature = "flatpak")]
+pub mod flatpak;
 pub mod pacman;
 
 pub struct Package {
@@ -36,6 +39,30 @@ impl std::fmt::Display for Package {
     }
 }
 
-pub trait Manager {
-    fn remote_search(query: &str) -> Result<Vec<Package>, Box<dyn Error>>;
+pub trait Manager: Send + Sync {
+    fn name(&self) -> &'static str;
+    fn remote_search(&self, query: &str) -> Result<Vec<Package>, Box<dyn Error>>;
+}
+
+static REGISTRY: OnceLock<Vec<&'static dyn Manager>> = OnceLock::new();
+
+pub fn init_backends() {
+    let managers: Vec<&'static dyn Manager> = vec![
+        #[cfg(feature = "pacman")]
+        &pacman::Pacman,
+        #[cfg(feature = "flatpak")]
+        &flatpak::Flatpak,
+    ];
+    REGISTRY.get_or_init(|| managers);
+}
+
+pub fn get_manager_by_name(name: &str) -> Option<&'static dyn Manager> {
+    REGISTRY.get()?.iter().find(|m| m.name() == name).copied()
+}
+
+pub fn list_available_backends() -> Vec<&'static str> {
+    REGISTRY
+        .get()
+        .map(|m: &Vec<&dyn Manager>| m.iter().map(|mg| mg.name()).collect())
+        .unwrap_or_default()
 }

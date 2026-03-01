@@ -12,7 +12,11 @@ struct UnmergedPackage {
 pub struct Pacman;
 
 impl Manager for Pacman {
-    fn remote_search(query: &str) -> Result<Vec<Package>, Box<dyn Error>> {
+    fn name(&self) -> &'static str {
+        "pacman"
+    }
+
+    fn remote_search(&self, query: &str) -> Result<Vec<Package>, Box<dyn Error>> {
         let output = Command::new("pacman").arg("-Ss").arg(query).output()?;
         let stdout = String::from_utf8(output.stdout)?;
         let lines: Vec<String> = stdout.lines().map(|s| s.to_string()).collect();
