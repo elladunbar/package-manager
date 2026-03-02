@@ -1,10 +1,8 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+# AGENTS.md
 
 ## Project Overview
 
-A Rust CLI tool providing a unified front end for multiple package managers. The project is version 0.1.0, uses Rust 2024 edition, and has zero external dependencies.
+A Rust CLI tool providing a unified front end for multiple package managers. The project is version 0.1.0 and uses Rust 2024 edition.
 
 **Supported backends:**
 - **pacman** (Arch Linux) - implemented and functional
@@ -80,11 +78,11 @@ src/
 
 1. **Strategy Pattern**: `Manager` trait allows extensible package manager implementations
 2. **Parser/Aggregator**: Pacman output is parsed into `UnmergedPackage`, then merged by name
-3. **Zero Dependencies**: Pure standard library usage
+3. **Minimal Dependencies**: Currently just standard library usage
 
 ## Development Notes
 
 - The codebase is minimal
-- No external crates are used - only `std` library
+- External crates are avoided unless specified
 - Output is colorized with ANSI codes: bold (name), green (version), cyan (repositories), magenta (end)
 - Multi-repository packages are merged into single entries with repository list
