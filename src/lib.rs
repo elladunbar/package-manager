@@ -3,6 +3,8 @@ use std::sync::OnceLock;
 
 #[cfg(feature = "flatpak")]
 pub mod flatpak;
+#[cfg(feature = "homebrew")]
+pub mod homebrew;
 pub mod pacman;
 
 pub struct Package {
@@ -52,6 +54,8 @@ pub fn init_backends() {
         &pacman::Pacman,
         #[cfg(feature = "flatpak")]
         &flatpak::Flatpak,
+        #[cfg(feature = "homebrew")]
+        &homebrew::Homebrew,
     ];
     REGISTRY.get_or_init(|| managers);
 }
