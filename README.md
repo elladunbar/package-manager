@@ -1,6 +1,6 @@
 # package-manager
 
-A unified CLI front end for multiple package managers, currently supporting Arch Linux's pacman with extensibility for additional backends like Flatpak.
+A unified CLI front end for multiple package managers, currently supporting Arch Linux's pacman, Flatpak, and macOS Homebrew with extensibility for additional backends.
 
 ## Features
 
@@ -32,9 +32,9 @@ Arguments:
   <search-query>    The package name or search term
 
 Options:
-  --backend=<NAME>  Specify which backend(s) to use (can be repeated)
-                    Available: pacman, flatpak
-  --help            Show this help message
+   --backend=<NAME>  Specify which backend(s) to use (can be repeated)
+                     Available: pacman, flatpak, homebrew
+   --help            Show this help message
 
 Examples:
   package-manager firefox
@@ -46,6 +46,7 @@ Examples:
 
 - **pacman** (Arch Linux) - enabled by default
 - **flatpak** - available via feature flag `--features flatpak`
+- **homebrew** (macOS) - available via feature flag `--features homebrew`
 
 ## Architecture
 
@@ -55,8 +56,12 @@ Examples:
 src/
 ├── main.rs          # Entry point - CLI argument handling, search invocation
 ├── lib.rs           # Core abstractions - Package struct, Manager trait
-└── pacman/
-    └── mod.rs       # Pacman implementation
+├── pacman/
+│   └── mod.rs       # Pacman implementation
+├── flatpak/
+│   └── mod.rs       # Flatpak implementation
+└── homebrew/
+    └── mod.rs       # Homebrew implementation
 ```
 
 ### Core Components

@@ -7,6 +7,7 @@ A Rust CLI tool providing a unified front end for multiple package managers. The
 **Supported backends:**
 - **pacman** (Arch Linux) - implemented and functional
 - **flatpak** - implemented and functional
+- **homebrew** (macOS) - implemented and functional
 - Additional package manager backends can be added via the `Manager` trait
 
 ## Key Commands
@@ -47,8 +48,10 @@ src/
 ├── lib.rs           # Core abstractions - Package struct, Manager trait, Display impl
 ├── pacman/
 │   └── mod.rs       # Pacman implementation of Manager trait
-└── flatpak/
-    └── mod.rs       # Flatpak implementation of Manager trait
+├── flatpak/
+│   └── mod.rs       # Flatpak implementation of Manager trait
+└── homebrew/
+    └── mod.rs       # Homebrew implementation of Manager trait
 ```
 
 ### Core Components
@@ -73,6 +76,15 @@ src/
 - Runs `flatpak list --app --columns=application` to detect installed status
 - Matches search results against installed apps via `app_id`
 - Merges multi-repository packages using `merge_packages()` function
+
+**`Homebrew` implementation (homebrew/mod.rs)**
+- Executes `brew search /{query}/` for package discovery
+- Uses `brew info --json=v2` to fetch detailed package metadata via serde
+- Supports both **formulas** (CLI tools) and **casks** (GUI applications)
+- Handles packages from multiple taps (repositories)
+- Merges multi-tap packages using `merge_packages()` function
+- Detects installed status by comparing stable version with installed version
+- Includes version comparison logic (`find_newest_version()`) for merged packages
 
 ### Key Patterns
 
